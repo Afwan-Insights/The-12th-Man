@@ -297,3 +297,32 @@ document.querySelectorAll('.claim-btn').forEach(btn => {
         btn.style.cursor = "default";
     });
 });
+function initMap() {
+    // Coordinates for Rajiv Gandhi International Cricket Stadium
+    const stadiumLocation = { lat: 17.4065, lng: 78.5505 };
+    
+    // Initialize the map with a custom Dark Mode theme
+    const map = new google.maps.Map(document.getElementById("stadium-map"), {
+        zoom: 15,
+        center: stadiumLocation,
+        disableDefaultUI: true, // Hides clunky map controls for a cleaner look
+        styles: [
+            { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+            { featureType: "road", elementType: "geometry", stylers: [{ color: "#38414e" }] },
+            { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#212a37" }] },
+            { featureType: "transit", elementType: "geometry", stylers: [{ color: "#2f3948" }] }
+        ]
+    });
+
+    // Drop a pin exactly on the stadium
+    new google.maps.Marker({
+        position: stadiumLocation,
+        map: map,
+        title: "Rajiv Gandhi International Stadium"
+    });
+}
+
+// Make the function globally available for the Google script to find it
+window.initMap = initMap;
