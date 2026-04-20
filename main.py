@@ -1,30 +1,45 @@
-from fastapi import FastAPI, HTTPException
+import subprocess
+from datetime import datetime
+from typing import List, Optional
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
-from typing import List, Optional
-import sqlite3
-from datetime import datetime
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
-# Phase 3: Setup FastAPI with CORS allowing all origins
+# --- SECURITY BLOCK START ---
+origins = [
+    "http://localhost:8080", 
+    "https://the-12th-man-app-444179922745.us-central1.run.app" 
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"], 
     allow_headers=["*"],
 )
 
-def get_db_connection():
-    conn = sqlite3.connect('stadium.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
 
-class ScanRequest(BaseModel):
-    ticket_id: str
-    scan_time: str
+class SOSReport(BaseModel):
+    zone: str = Field(..., min_length=1, max_length=50)
+    issue_type: str = Field(..., min_length=3, max_length=100)
+    urgency: int = Field(..., ge=1, le=5) 
+
+@app.post("/api/sos-report")
+async def receive_sos(report: SOSReport):
+    print(f"Secure SOS received from Zone {report.zone}")
+    return {"status": "success", "message": "Report validated and securely logged."}
+# --- SECURITY BLOCK END ---
 
 @app.post("/api/loyalty/scan")
 def scan_ticket(req: ScanRequest):

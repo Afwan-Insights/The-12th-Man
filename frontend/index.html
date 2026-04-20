@@ -8,10 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <main></main>
     <header class="glass-header">
         <div class="header-left">
             <h1 class="logo">The 12th <span>Man</span></h1>
-            <select id="match-selector" class="match-select">
+            <select aria-label="Select match to view data" id="match-selector"></select>
                 <option value="IPL2026-SRH-RCB-0522">SRH vs RCB - May 22</option>
                 <option value="IPL2026-CSK-MI-0524">CSK vs MI - May 24</option>
             </select>
@@ -25,8 +26,8 @@
             </div>
         </div>
         <div class="header-actions">
-            <button id="toggle-exit-mode" class="admin-toggle-btn">Simulate Match End</button>
-            <button id="sos-btn" class="sos-btn pulse-glow">🚨 Report Issue (SOS)</button>
+            <button aria-label="Reset match data" onclick="resetMatch()">Reset Match</button>
+            <button aria-label="Report emergency issue" class="sos-btn">REPORT ISSUE (SOS)</button>
         </div>
     </header>
 
@@ -82,9 +83,9 @@
         <section class="card telemetry-card glass-panel">
             <h2>🏟️ Live Traffic</h2>
             <div class="tabs">
-                <button class="tab-btn active" data-target="gates" id="tab-gates-lbl">Entry Gates</button>
-                <button class="tab-btn" data-target="food">Concessions</button>
-                <button class="tab-btn" data-target="restrooms">Restrooms</button>
+                <button aria-label="View Entry Gate traffic" class="tab-btn active">Entry Gates</button>
+                <button aria-label="View Food Concession traffic" class="tab-btn">Concessions</button>
+                <button aria-label="View Restroom traffic" class="tab-btn">Restrooms</button>
             </div>
             <div id="gates" class="tab-content active heatmap-grid"></div>
             <div id="food" class="tab-content heatmap-grid"></div>
@@ -99,7 +100,7 @@
             <div class="chat-header-icons">
                 <span class="notification-badge" id="notif-badge">1</span>
                 <span class="online-dot"></span>
-                <button id="toggle-chat">▲</button>
+                <button aria-label="Open AI Concierge Chat" id="toggle-chat">▲</button>
             </div>
         </div>
         <div class="chat-body collapsed" id="chat-body"></div>
@@ -141,5 +142,6 @@
 
     <script src="script.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWAs6KOtcBHd4ThVKPCgNaZllbV6UQz3A"></script>
+    </main>
 </body>
 </html>
