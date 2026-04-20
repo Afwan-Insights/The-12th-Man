@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 12th Man | Smart Stadium</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="glass-header">
+        <div class="header-left">
+            <h1 class="logo">The 12th <span>Man</span></h1>
+            <select id="match-selector" class="match-select">
+                <option value="IPL2026-SRH-RCB-0522">SRH vs RCB - May 22</option>
+                <option value="IPL2026-CSK-MI-0524">CSK vs MI - May 24</option>
+            </select>
+        </div>
+        <div class="score-container">
+            <div id="match-status" class="status-indicator live">LIVE</div>
+            <div class="score-details">
+                <span id="match-teams" class="teams">Loading Match...</span>
+                <span id="match-score" class="score"></span>
+                <span id="match-overs" class="overs"></span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button id="toggle-exit-mode" class="admin-toggle-btn">Simulate Match End</button>
+            <button id="sos-btn" class="sos-btn pulse-glow">🚨 Report Issue (SOS)</button>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Default State: Gamification Card -->
+        <section id="gamification-card" class="card gamification-card glass-panel">
+            <h2>🏆 Match Day Rewards</h2>
+            <div class="rewards-flex">
+                <div class="reward-info">
+                    <span class="label">Loyalty Points</span>
+                    <span class="value" id="loyalty-points">450</span>
+                    <span class="tier gold">Gold Tier</span>
+                </div>
+                <div class="countdown-info">
+                    <span class="label">Minutes to Toss</span>
+                    <div class="time-box" id="toss-countdown">124</div>
+                </div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill gold-gradient" style="width: 75%;"></div></div>
+            <p class="reward-hint">Arrive early to unlock Platinum Tier benefits!</p>
+        </section>
+
+        <!-- Exit State: Transit & Safe Exit Card -->
+        <section id="safe-exit-card" class="card safe-exit-card glass-panel" style="display: none;">
+            <h2>🚨 Transit & Safe Exit Plan</h2>
+            <div class="exit-grid">
+                <div class="exit-row"><span class="e-icon">🚇</span> <div class="e-text"><span class="e-title">Metro</span><span class="e-desc good">Trains every 3 mins. Green Line running smoothly.</span></div></div>
+                <div class="exit-row"><span class="e-icon">🚖</span> <div class="e-text"><span class="e-title">Cab Pick-ups</span><span class="e-desc warning">Zone B congested. Please use Zone A instead.</span></div></div>
+                <div class="exit-row"><span class="e-icon">♿</span> <div class="e-text"><span class="e-title">PWD Exits</span><span class="e-desc good">Gates 3 & 5 allocated exclusively for accessible exits.</span></div></div>
+            </div>
+            <p class="exit-hint">Please do not rush. Stadium stewards are available at all stairwells.</p>
+        </section>
+
+        <!-- Live Offers Panel -->
+        <section id="offers-card" class="card offers-card glass-panel">
+            <h2>🎁 Live Offers</h2>
+            <div class="offers-grid">
+                <div class="offer-item">
+                    <span class="offer-title" id="offer1-title">Fast-Track Entry</span>
+                    <span class="offer-desc" id="offer1-desc">Gold Tier Exclusive</span>
+                    <button class="claim-btn">Claim</button>
+                </div>
+                <div class="offer-item highlight">
+                    <span class="offer-title" id="offer2-title">Merch Discount</span>
+                    <span class="offer-desc" id="offer2-desc">20% Off Jerseys</span>
+                    <button class="claim-btn">Claim</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Telemetry Tabs -->
+        <section class="card telemetry-card glass-panel">
+            <h2>🏟️ Live Traffic</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-target="gates" id="tab-gates-lbl">Entry Gates</button>
+                <button class="tab-btn" data-target="food">Concessions</button>
+                <button class="tab-btn" data-target="restrooms">Restrooms</button>
+            </div>
+            <div id="gates" class="tab-content active heatmap-grid"></div>
+            <div id="food" class="tab-content heatmap-grid"></div>
+            <div id="restrooms" class="tab-content heatmap-grid"></div>
+        </section>
+    </main>
+
+    <!-- VenueScout AI -->
+    <div class="chat-widget glass-panel">
+        <div class="chat-header" id="chat-header">
+            <h3>VenueScout AI</h3>
+            <div class="chat-header-icons">
+                <span class="notification-badge" id="notif-badge">1</span>
+                <span class="online-dot"></span>
+                <button id="toggle-chat">▲</button>
+            </div>
+        </div>
+        <div class="chat-body collapsed" id="chat-body"></div>
+        <div class="chat-footer collapsed">
+            <input type="text" id="chat-input" placeholder="Ask VenueScout...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <!-- SOS Modal -->
+    <div id="sos-modal" class="modal-overlay">
+        <div class="modal-content glass-panel sos-panel">
+            <div class="modal-header">
+                <h2>Emergency / Report Issue</h2>
+                <button id="close-modal">&times;</button>
+            </div>
+            <form id="sos-form">
+                <label for="sos-category">Category</label>
+                <select id="sos-category" required>
+                    <option value="">Select an Option...</option>
+                    <option value="medical">Medical Emergency</option>
+                    <option value="security">Security Incident</option>
+                    <option value="spill">Spill / Cleaning Req.</option>
+                    <option value="seat">Broken Seat</option>
+                </select>
+                <label for="sos-desc">Description</label>
+                <textarea id="sos-desc" rows="3" placeholder="Describe the situation..." required></textarea>
+                <label for="sos-image">Capture Image</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="sos-image" accept="image/*" capture="environment">
+                </div>
+                <button type="submit" class="danger-btn">Submit Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">Issue reported successfully. Staff notified.</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
