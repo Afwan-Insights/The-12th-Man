@@ -50,8 +50,18 @@ A context-aware agent that dynamically handles SOS reporting, stadium policies, 
 * **Backend:** FastAPI (Python), SQLite
 * **Frontend:** Vanilla JavaScript, HTML5, CSS3
 * **Deployment:** Architected natively through Google Antigravity's MCP and deployed directly from source to **Google Cloud Run** using a serverless containerized architecture.
+---
+
+## ☁️ Google Cloud & AI Integration
+This application was architected and deployed utilizing a native Google technology stack to ensure scalability and high availability:
+
+* **Google Cloud Run:** The application is fully containerized and hosted on Google Cloud Run, utilizing serverless architecture to automatically scale based on stadium crowd spikes.
+* **Google Maps JavaScript API:** Powers the dynamic "Transit & Safe Exit" routing, utilizing dark-mode customized Maps to visually guide fans to Metro and cab zones.
+* **Google Antigravity (AI Agent):** The entire application lifecycle—from FastAPI architecture to direct-from-source GCP deployment—was orchestrated using Google's Antigravity agent via the Model Context Protocol (MCP).
+* **Google Cloud CLI:** Continuous deployment handled natively via `gcloud run deploy` buildpacks.
 
 ---
+
 
 ## 🚀 Future Roadmap
 While this prototype successfully validates the core crowd-routing logic, the next iterations of The 12th Man would focus on enterprise scale:
