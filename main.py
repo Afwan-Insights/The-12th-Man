@@ -1,3 +1,4 @@
+import sqlite3
 import subprocess
 from datetime import datetime
 from typing import List, Optional
@@ -5,8 +6,12 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from fastapi.middleware.gzip import GZipMiddleware
 
 app = FastAPI()
+
+# --- EFFICIENCY PATCH ---
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # --- SECURITY BLOCK START ---
 origins = [
@@ -40,6 +45,18 @@ async def receive_sos(report: SOSReport):
     print(f"Secure SOS received from Zone {report.zone}")
     return {"status": "success", "message": "Report validated and securely logged."}
 # --- SECURITY BLOCK END ---
+
+# --- DATABASE CONNECTION ---
+def get_db_connection():
+    conn = sqlite3.connect('stadium.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.post("/api/loyalty/scan")
+class ScanRequest(BaseModel):
+    ticket_id: str
+    scan_time: str
+
 
 @app.post("/api/loyalty/scan")
 def scan_ticket(req: ScanRequest):

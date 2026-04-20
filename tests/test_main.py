@@ -17,3 +17,13 @@ def test_telemetry_data():
     
     # Check that the server is returning a JSON response (like a dictionary or list)
     assert isinstance(response.json(), (dict, list))
+    def test_invalid_sos_report_security():
+        # Intentionally sending a bad payload (missing the 'zone', and 'urgency' is too high)
+        bad_payload = {
+            "issue_type": "Medical Emergency",
+            "urgency": 10  # This should fail because max urgency is 5
+        }
+        response = client.post("/api/sos-report", json=bad_payload)
+        
+        # We explicitly EXPECT a 422 error because our Pydantic validation blocked it
+        assert response.status_code == 422
